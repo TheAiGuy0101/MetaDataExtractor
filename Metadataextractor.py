@@ -40,13 +40,16 @@ def split_cases_and_extract_metadata(file_path):
         
         try:
             # Extract bench name
-            pattern = r"BEFORE\s+(THE HON’BLE.*)"
+            #pattern = r"BEFORE\s+(THE HON’BLE.*)"
+            #pattern = r"BEFORE\s+(THE HON’BLE.*?)(?=THE HON’BLE|\Z)"
+            #pattern = r"THE HON’BLE\s+.*?\s+J\."
+            pattern = r"BEFORE\s+((?:THE HON’BLE\s+.*?\s+J\.\s*)+)\n\n"
             bench_match = re.search(pattern, case, re.DOTALL)
             #bench_match = re.search(r'BEFORE\s+((?:THE HON\'BLE[^.]+[.]?\s*)+)', case, re.DOTALL)
             if bench_match:
                 #bench_text = bench_match.group(1)
                 #judges = re.findall(r'THE HON\'BLE\s+([^,\.]+)(?:[,\.]?\s*J\.?)?', bench_text)
-                metadata['bench'] = bench_match.group() #' AND '.join(judges)
+                metadata['bench'] = bench_match.group(1).strip() #' AND '.join(judges)
             else:
                 logger.warning(f"Failed to extract bench for case {i}")
                 metadata['bench'] = ''
